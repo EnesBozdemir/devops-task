@@ -1,0 +1,19 @@
+FROM php:7.1-apache
+
+RUN apt-get update && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        libssl-dev \
+        libmcrypt-dev \
+        libxml2-dev \
+        libonig-dev \
+        libzip-dev \
+        unzip \
+        && docker-php-ext-install -j$(nproc) iconv mbstring mysqli pdo_mysql soap zip \
+        && pecl install sqlsrv pdo_sqlsrv \
+        && docker-php-ext-enable sqlsrv pdo_sqlsrv \
+        && a2enmod rewrite \
+        && service apache2 restart
+
+COPY QuickDbTest.php /var/www/html/
